@@ -1,6 +1,21 @@
 """
+KeyDecompose
 
+Purpose:
+A set of tools to take a pandas DataFrame
+and return the smallest possible unique
+combination of columns that represent
+the entire dataset
 
+Functions:
+decompose_frame - the primary function, performs all needed actions
+    L Returns a List containing the smallest unique column set
+
+recur_weights - the recursive function to eval and breakdown the frame
+    L Returns either itself to recur or a List containing the smallest unique column set
+
+generate_weighted_series - uses nunique to find the distinct value count of the columns in the frame and weight them against the max distinct value
+    L Returns a Series containing the column names and a weighted value from 1 to 0 of how distinct the column's data is
 """
 
 
