@@ -33,7 +33,6 @@ Callable | List:
 
     check_list = [x for x in df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()]
     if len(check_list) > 0:
-        print('breaking')
         return check_list
 
     # check if we've reached the max id
@@ -46,7 +45,6 @@ Callable | List:
     # is the current series label combination unique in the dataframe
     if len(df_inc[weight_series.index].drop_duplicates()) == drop_dupe_frame_size:
         # if it is unique, removed the last column
-        print('looping')
         try:
             removed_col = weight_series.idxmin()
         except ValueError:
