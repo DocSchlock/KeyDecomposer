@@ -1,6 +1,21 @@
 """
+KeyDecompose
 
+Purpose:
+A set of tools to take a pandas DataFrame
+and return the smallest possible unique
+combination of columns that represent
+the entire dataset
 
+Functions:
+decompose_frame - the primary function, performs all needed actions
+    L Returns a List containing the smallest unique column set
+
+recur_weights - the recursive function to eval and breakdown the frame
+    L Returns either itself to recur or a List containing the smallest unique column set
+
+generate_weighted_series - uses nunique to find the distinct value count of the columns in the frame and weight them against the max distinct value
+    L Returns a Series containing the column names and a weighted value from 1 to 0 of how distinct the column's data is
 """
 
 
@@ -29,16 +44,16 @@ Callable | List:
     :param: last_column_removed - str or None, the label of the last removed column kept \
     in case the column removal deadends
     """
-    df_weighted = weight_series.to_frame()
+    #df_weighted = weight_series.to_frame()
 
-    check_list = [x for x in df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()]
-    if len(check_list) > 0:
-        print('breaking')
-        return check_list
+    # check if any of the columns are unique by themselves
+    # check_list = df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()
+    # if len(check_list) > 0:
+    #     return check_list
 
     # check if we've reached the max id
     if weight_series.tail(1).values == 2:
-        return weight_series.index
+        return weight_series.index.tolist()
 
     # store the last good series at the start of the run
     last_data = weight_series
@@ -46,32 +61,31 @@ Callable | List:
     # is the current series label combination unique in the dataframe
     if len(df_inc[weight_series.index].drop_duplicates()) == drop_dupe_frame_size:
         # if it is unique, removed the last column
-        print('looping')
         try:
             removed_col = weight_series.idxmin()
         except ValueError:
-            return last_data.index
+            return last_data.index.tolist()
         fields_del = weight_series.drop(removed_col) # drop the least weight item
         #if there are no fields left after the last column is removed, return
         if fields_del.size == 0:
-            return last_data.index
+            return last_data.index.tolist()
         return recur_weights(df_inc,fields_del,drop_dupe_frame_size,removed_col)
     elif last_column_removed is not None:
         # add the last removed column back at the beginning of the Series
         # with a value of 2 to cause breaks
-        weight_series = pd.concat(pd.Series([2],index=[last_column_removed]),weight_series)
+        weight_series = pd.concat([pd.Series([2],index=[last_column_removed]),weight_series])
         return recur_weights(df_inc,weight_series,drop_dupe_frame_size,None)
     else:
-        return last_data.index
+        return last_data.index.tolist()
 
 def generate_weighted_series(frame: pd.DataFrame,frame_len:int) -> pd.Series:
     """
     Generates a Series with labels of the column names
-    The values are weighted 1-0 versus the distinct row count
-    of the de-duplicated frame
+    The values are weighted 1-0 vs max distinct col value
     :param: frame - pandas.dataframe
     :return: pandas.Series containing weight unique values versus the contents of the frame
     """
     series_unique = frame.nunique()
+    series_max = series_unique.max()
     return series_unique.map(lambda x: x*(1/frame_len), na_action='ignore') \
     .sort_values(ascending=False)
