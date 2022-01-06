@@ -29,7 +29,7 @@ Callable | List:
     :param: last_column_removed - str or None, the label of the last removed column kept \
     in case the column removal deadends
     """
-    df_weighted = weight_series.to_frame()
+    #df_weighted = weight_series.to_frame()
 
     # check if any of the columns are unique by themselves
     # check_list = df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()
