@@ -31,7 +31,8 @@ Callable | List:
     """
     df_weighted = weight_series.to_frame()
 
-    check_list = [x for x in df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()]
+    # check if any of the columns are unique by themselves
+    check_list = df_weighted.loc[:, (df_weighted.eq(1.0).any(axis=0) == True)].index.tolist()
     if len(check_list) > 0:
         return check_list
 
