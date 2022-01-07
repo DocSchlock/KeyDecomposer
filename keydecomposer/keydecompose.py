@@ -52,7 +52,10 @@ Callable | List:
     #     return check_list
 
     # check if we've reached the max id
-    if weight_series.tail(1).values == 2:
+    # and also we're still unique
+    # this catches where a last column needs reapplied yet
+    if weight_series.tail(1).values == 2 and \
+    len(df_inc[weight_series.index].drop_duplicates()) == drop_dupe_frame_size:
         return weight_series.index.tolist()
 
     # store the last good series at the start of the run
