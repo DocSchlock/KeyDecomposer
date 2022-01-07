@@ -90,5 +90,5 @@ def generate_weighted_series(frame: pd.DataFrame,frame_len:int) -> pd.Series:
     """
     series_unique = frame.nunique()
     series_max = series_unique.max()
-    return series_unique.map(lambda x: x*(1/frame_len), na_action='ignore') \
+    return series_unique.map(lambda x: x*(1/series_max), na_action='ignore') \
     .sort_values(ascending=False)
