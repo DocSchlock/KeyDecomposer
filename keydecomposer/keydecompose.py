@@ -30,7 +30,7 @@ def decompose_frame(frame:pd.DataFrame):
     """
     _frame = frame.drop_duplicates()
     _frame_size = len(_frame)
-    _weight_series = generate_weighted_series(_frame,_frame_size)
+    _weight_series = generate_weighted_series(_frame)
 
     return recur_weights(_frame,_weight_series,_frame_size,None)
 
@@ -81,7 +81,7 @@ Callable | List:
     else:
         return last_data.index.tolist()
 
-def generate_weighted_series(frame: pd.DataFrame,frame_len:int) -> pd.Series:
+def generate_weighted_series(frame: pd.DataFrame) -> pd.Series:
     """
     Generates a Series with labels of the column names
     The values are weighted 1-0 vs max distinct col value
