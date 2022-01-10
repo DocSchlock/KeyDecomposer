@@ -1,3 +1,14 @@
+
+## INSTALLATION
+
+Don't have the module building yet, so to install you can run:
+> pip install .
+
+in the checked out directory.
+
+To uninstall, run:
+> pip uninstall keydecomposer
+
 ## Purpose
 This script provides a way to idenfify the smallest unique column set in a pandas dataframe of any size.
 
