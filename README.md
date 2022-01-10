@@ -17,6 +17,7 @@ This script provides a way to idenfify the smallest unique column set in a panda
 
 ## Usage
 ```
+import pandas as pd
 import keydecomposer as kd
 
 frame = pd.DataFrame() # generate this however you want
