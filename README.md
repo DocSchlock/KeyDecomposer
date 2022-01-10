@@ -29,6 +29,6 @@ The unique column set is only for the exact dimensions and values of the datafra
 Passing in a partial set of a larger frame will provide a unique column set for the partial frame only.
 
 ## Future Changes
-Implement a unique column shortcut - instead of parsing the frame, identify a unique column from the start and shortcut the process.
-Add a flag to return all valid unique column sets instead of the smallest one.
-Check and see if the pd.Concat call can be optimized.
+* Implement a unique column shortcut - instead of parsing the frame, identify a unique column from the start and shortcut the process.
+* Add a flag to return all valid unique column sets instead of the smallest one.
+* Check and see if the pd.Concat call can be optimized.
