@@ -30,7 +30,7 @@ def decompose_frame(frame:pd.DataFrame):
     """
     _frame = frame.drop_duplicates()
     _frame_size = len(_frame)
-    _weight_series = generate_weighted_series(_frame,_frame_size)
+    _weight_series = generate_weighted_series(_frame)
 
     return recur_weights(_frame,_weight_series,_frame_size,None)
 
@@ -52,7 +52,10 @@ Callable | List:
     #     return check_list
 
     # check if we've reached the max id
-    if weight_series.tail(1).values == 2:
+    # and also we're still unique
+    # this catches where a last column needs reapplied yet
+    if weight_series.tail(1).values == 2 and \
+    len(df_inc[weight_series.index].drop_duplicates()) == drop_dupe_frame_size:
         return weight_series.index.tolist()
 
     # store the last good series at the start of the run
@@ -78,7 +81,7 @@ Callable | List:
     else:
         return last_data.index.tolist()
 
-def generate_weighted_series(frame: pd.DataFrame,frame_len:int) -> pd.Series:
+def generate_weighted_series(frame: pd.DataFrame) -> pd.Series:
     """
     Generates a Series with labels of the column names
     The values are weighted 1-0 vs max distinct col value
@@ -87,5 +90,5 @@ def generate_weighted_series(frame: pd.DataFrame,frame_len:int) -> pd.Series:
     """
     series_unique = frame.nunique()
     series_max = series_unique.max()
-    return series_unique.map(lambda x: x*(1/frame_len), na_action='ignore') \
+    return series_unique.map(lambda x: x*(1/series_max), na_action='ignore') \
     .sort_values(ascending=False)
